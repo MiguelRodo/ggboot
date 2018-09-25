@@ -1,0 +1,158 @@
+Basic maintenance
+
+- on.exit
+-- stops a cluster when the function exists, if a cluster exists
+
+
+
+
+Data and function preliminaries
+- variables
+-- gets vectors of variables specified by user from data
+--- xAxisVec, colVec, facetVec, diffVec, respVec
+-- creates a vector of grouping variables
+--- not including diff, as this doesn't group for the plot
+-- splitVec
+--- creates a vector the splitVec
+--- includes diff, which is marginalised out later
+
+- xAxisLabel
+-- Gets xLab from name of xAxisVar if not supplied by user
+
+- calcStat and calcSE
+-- creates calcStat and calcSE
+-- functions based on user choice for calcStat argument
+
+- calcStatVec and calcBootStatVec 
+-- Functions that calculates statistics on
+-- original (calcStatVec) and bootstrap (calcBootStatVec) sample
+-- For "perc" pMethod option
+--- Calculates only calcStat 
+-- For "percT" pMethod option
+--- Calculates
+---- calcStat, and
+---- calcSE 
+----- standard deviation of bootstrap samples of 
+----- sample data (whether original data or bootstrap)
+
+
+
+
+Original sample and bootstrap samples
+
+- create parallel cluster if required
+
+- no difference taken
+-- origStatTbl
+--- calculate calcStatVec for
+--- each level in group
+--- Then
+---- Calculate 
+---- origTStat = ( origStat - nullValue ) / origSE 
+-- bootTbl
+--- Calculates calcBootStatVec B times for each group
+--- If method == "percT"
+---- Calculates 
+----- bootTStat = ( bootStat - nullValue + appropriate origStat ) / bootSE )
+----- this is the boot t-stat under the null hypothesis
+
+- difference taken
+-- if pMethod is "perc"
+--- origStatTbl
+---- Calculates origStat for each group, within diff
+---- Subtracts between diff groups
+----- The level of the diff group that is ordered second, 
+----- is the level subtracted from, e.g. "1" has "0" subtracted
+----- from it. 
+--- bootTbl
+---- Calculates bootStat for each group, within diff
+---- Subtractes between diff groups, as for origStatTbl
+----- Here it is explicitly group "1" that has group "0" 
+----- subtracted from it. 
+-- if pMethod is "percT"
+--- origDataTbl
+---- Creates useful columns for grouping observations
+--- origStatTbl
+---- Draws out 
+----- response vectors for each diff level
+---- Calculates 
+----- statDiff = calcStat( resp_1 ) - calcStat( resp_2 ), 
+----- diffSE = sqrt( se1^2 + se2^2 ), 
+----- origTStat = ( statDiff - nullValue ) / diffSE  
+--- bootTbl
+---- Calculates bootStat and bootSE for each bootstrap sample
+---- Creates two tables
+----- One for bootEst
+----- The other for bootSE
+----- Separate column for bootSE and bootStat for the diff groups
+---- Merges above tables based on tempID, which arbitrarily relates
+----- one bootstrap sample to the other from the diff groups
+---- Returns table where 
+----- bootStat = stat1 - stat0, and
+----- bootSE = sqrt( se_1^2 + se+2^2 ), and
+----- bootTStat = ( bootStat - origStat + nullValue ) / bootSE 
+---- and bootTStat subtracts origStat from stat1 0 stat0 and adds nullValue, and divides
+---- by standard error of difference, the square root of the sum of the 
+---- squared standard errors
+
+- bootSE smooth and possibly corr
+-- if pMethod is "percT'
+--- draw down
+---- origStat and
+----- For predicting origSE 
+---- origSE
+----- For comparing predicted origSE to actual
+--- fit gam model to
+---- bootSE ~ s( bootStat, df = 4)
+--- bootFit
+---- fitted bootSEs
+--- origSEFit
+---- predicted origSE
+--- adjFactor
+---- currOrigSE / origSEFit
+--- bootFit
+---- bootFit * adj
+
+
+Calculating confidence intervals using calcCI
+- if method is "bca"
+-- Calculates
+--- lb and ub using calcBCaQuant
+--- z0CI = calcBCaZ0Boot( bootStat, origStat)
+--- aCI = calcBCaA( bootStat, calcStat )
+- if method is "perc"
+-- Uses percentiles of bootstrap sample to
+-- calculate lb and ub
+- for both
+-- calculate 
+--- z0CI = calcBcaZ0Boot( bootStat, origStat )
+--- aCI = calcBCaP( bootStat, calcStat )
+
+Calculating p-values using calcPTbl
+- if method is "perc"
+-- Calculates 
+--- p using calcP function
+---- It gives bootStat and origStat as the bootstrap
+---- samples and original statistic, respectively
+--- z0P = calcBCaZ0Boot( bootStat, origStat )
+--- aP = calcBCaA( bootStat, calcStat ) 
+- if method is "percT"
+-- Calculates
+--- p using calcP function
+---- It gives bootStat and origStat as the bootstrap
+---- samples and original statistic, respectively
+--- z0P = calcBCaZ0Boot( ( bootStat - nullValue ) / bootSE, origStat )
+--- aP = calcBCaA( bootTStat, calcStat ) 
+
+
+
+- calcP
+-- if method is "perc"
+--- Recalculates bootStat as bootStat less origStat plus nullValue
+---- Centres boot samples as under null hypothesis
+---- bootTStat already as under null hypothesis
+--- if method is "perc" or "percT"
+---- Calculates p-values using percentile method, as
+---- proportion of boot sample under null hypothesis above
+---- origStat if altSide is "high", for example. 
+

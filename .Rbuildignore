@@ -1,0 +1,7 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+^debug/debug-ggbootUV\.R$
+^debug/$
+^testFile\.R$
+^README\.Rmd$
+^README-.*\.png$

@@ -1,0 +1,23 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "README-"
+)
+```
+
+# ggboot
+
+The package ggboot provides the functions used to compile the figures in the package VaccComp for the paper 'A comparison of antigen-specific T cell responses induced by six novel tuberculosis vaccine candidates'. 
+
+You can install ggboot from Github using the following code:
+
+```{r echo = TRUE, eval = FALSE}
+devtools::install_github( repo = "ggboot", username = "MiguelRodo", auth_token = )
+```

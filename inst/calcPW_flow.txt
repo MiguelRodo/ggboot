@@ -1,0 +1,107 @@
+- on.exit
+-- stops a cluster when the function exists, if a cluster exists
+
+- calcStat & calcSE
+-- Creates functions to calculate
+-- calcStat and se of the calcStat (based on bootstrapping)
+-- for a sample. 
+-- These lack indexes, so are not intended for bootstrapping. 
+
+- calcBootStatVec
+-- calculates the bootstrap sample statistic
+-- and its standard error 
+--- as the standard deviation of testimates
+--- of the bootstrap statistics from that
+--- bootstrap sample
+-- only includes calcSE  in calcBootStatVec if method == "percT"
+--- This is to speed up the function significantly
+
+- combnVec
+-- creates a vector of
+-- all pair-wise combinations of 
+-- levels in group column of data. 
+
+- rawOrigStatTbl
+-- if method is "perc"
+--- calculates calcStat for 
+--- each level in group
+-- if method is "percT"
+--- calculates
+--- calcStat and calcSE for
+--- each level in group
+
+- origStatTbl
+-- if method is "perc"
+--- calculates
+---- origStat_x - origStat_y
+---- for each level in combnVec, where
+---- x is the value before the "_", and
+---- y is the value after. 
+
+-- if method is "percT"
+--- calculates
+---- origStat_x - origStat_y, and
+---- sqrt( se_x^2 + se_y^2 ), 
+---- for each level in combnVec, where
+---- x is the value before the "_", and
+---- y is the value after. 
+
+- return
+-- if fdr is NULL
+-- return origStatTbl
+--- This is the tibble of
+--- differences between levels of group 
+--- for all pair-wise combinations
+
+- create cluster
+-- only do this now, as it 
+-- makes the function faster
+-- if only raw estimates are required
+
+- rawBootStatTbl
+-- for each level in group
+--- calculate calcBootStatVec
+--- on B bootstrap samples. 
+--- then rename columns accordingly. 
+
+- statTbl
+-- for each pair-wise combination 
+-- of levels within group
+--- draw down
+---- bootStat from rawBootStatTbl
+---- origStat from origStatTbl
+--- calculate 
+---- bootStat* = bootStat_x - bootStat_y
+---- for each arbitrarily paired bootstrapped samples
+--- if method is "perc"
+---- calculate proportion of 
+---- bootStatVec - origStat
+---- samples
+---- above and
+---- (separately) below
+---- origStat.
+--- if method is "percT"
+---- draw down
+----- bootSE from rawBootStatTbl
+----- origTStat from origStatTbl
+---- calculate for
+---- each arbitrarily paired bootstrapped samples
+----- bootStatSE* as
+------ sqrt( se*_x^2 + se*_y^2 )
+---- calculate
+----- bootTStatVec* for
+----- each pair of arbitrarily paied bootstrapped samples as
+------ ( bootStat* - origStat ) / bootSE*
+----- calculate proportion of
+----- bootTStat* samples
+----- above and
+----- (separately)
+----- below
+----- origTStat
+--- calculate pValue as double lower of alpha proportions
+--- create a tibble with
+---- x, y, split, p and origStat columns
+---- also add
+----- facet column if facet was in data
+
+- return statTbl

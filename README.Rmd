@@ -10,7 +10,8 @@ output:
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  fig.path = "README-"
+  fig.path = "README-", 
+  tidy = TRUE
 )
 ```
 
@@ -21,5 +22,5 @@ The package ggboot provides the functions used to compile the figures in the pac
 You can install ggboot from Github using the following code:
 
 ```{r echo = TRUE, eval = FALSE}
-devtools::install_github( "MiguelRodo/ggboot",auth_token = "6e2e0112fec5ddeb63ef38c74ecb8618adecc700" )
+devtools::install_github( "MiguelRodo/ggboot", auth_token = "6e2e0112fec5ddeb63ef38c74ecb8618adecc700" )
 ```

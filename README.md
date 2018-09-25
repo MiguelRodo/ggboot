@@ -7,5 +7,5 @@ The package ggboot provides the functions used to compile the figures in the pac
 You can install ggboot from Github using the following code:
 
 ``` r
-devtools::install_github( repo = "ggboot", username = "MiguelRodo", auth_token = )
+devtools::install_github( "MiguelRodo/ggboot",auth_token = "6e2e0112fec5ddeb63ef38c74ecb8618adecc700" )
 ```

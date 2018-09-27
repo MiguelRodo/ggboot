@@ -16,7 +16,7 @@ ggbootUV(data, resp, xAxis, col = NULL, facet = NULL, nullBFactor = 10,
   "yellow3", "cyan2", "orange2"), colLabVec = NULL, facetLabVec = NULL,
   facetScale = "free", nCol = 2, plotTblName = NULL,
   fontScaleFactor = 1, lineScaleFactor = 1, hLineFactor = 1,
-  bootT = TRUE, trim = 0.2, bootSECorr = TRUE)
+  bootT = TRUE, trim = 0.2, bootSECorr = FALSE)
 }
 \arguments{
 \item{data}{dataframe. Has one row per observation and the column names specified below.}

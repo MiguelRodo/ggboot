@@ -59,7 +59,7 @@ ggbootUV = function( data, resp, xAxis, col = NULL, facet = NULL, nullBFactor = 
   facetLabVec = NULL, facetScale = 'free', nCol = 2,
   plotTblName = NULL,
   fontScaleFactor = 1, lineScaleFactor = 1, hLineFactor = 1,
-    bootT = TRUE, trim = 0.2,  bootSECorr = TRUE ){
+    bootT = TRUE, trim = 0.2,  bootSECorr = FALSE ){
 
   ### PRELIMINARIES ###
   on.exit( if( exists( "cl1" ) ) parallel::stopCluster( cl1 ) )

@@ -360,7 +360,9 @@ ggbootUV = function( data, resp, xAxis, col = NULL, facet = NULL, nullBFactor = 
     p = p +
       scale_linetype_manual( labels = c( "0" = "Not significant", "1" = "Significant" ),
         name = "",
-        values = c( "0" = errBarLineType, '1' = 'solid' ) )
+        values = c( "0" = errBarLineType, '1' = 'solid' ),
+        drop = FALSE,
+        limits = c( "0", "1" ) )
     }
 
     if( fdr == 1 ) p = p + geom_errorbar( aes( ymin = lb, ymax = ub, width = width ),
@@ -376,7 +378,9 @@ ggbootUV = function( data, resp, xAxis, col = NULL, facet = NULL, nullBFactor = 
       p = p +
         scale_linetype_manual( labels = c( "0" = "Not significant", "1" = "Significant" ),
           name = "",
-          values = c( "0" = errBarLineType, '1' = 'solid' )  )
+          values = c( "0" = errBarLineType, '1' = 'solid' ),
+          drop = FALSE,
+          limits = c( "0", "1" )   )
     }
 
     if( fdr == 1 ) p = p + geom_errorbar( aes( ymin = lb, ymax = ub, col = V2, width = width ),
